@@ -7,3 +7,7 @@
 /Dev.Io.Backend/src/DevIO.Business/obj/*
 /Dev.Io.Backend/src/DevIO.Data/obj/*
 /Dev.Io.Backend/.vs/*
+Dev.Io.Backend/src/DevIO.Api/bin/*
+Dev.Io.Backend/src/DevIO.Business/bin/*
+/Dev.Io.Backend/src/DevIO.Data/bin/*
+.vs/*
