@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Dev.Io.Backend/.vs/MinhaAPICompleta
+/Dev.Io.Backend/src/DevIO.Api/obj
+/Dev.Io.Backend/src/DevIO.Business/obj
+/Dev.Io.Backend/src/DevIO.Data/obj
