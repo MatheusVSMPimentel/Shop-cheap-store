@@ -11,3 +11,4 @@ Dev.Io.Backend/src/DevIO.Api/bin/*
 Dev.Io.Backend/src/DevIO.Business/bin/*
 /Dev.Io.Backend/src/DevIO.Data/bin/*
 .vs/*
+/shop-cheap-store/.vscode/
