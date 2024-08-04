@@ -1,8 +1,14 @@
+import { StringUtils } from "./string-util";
+
 export class LocalStorageUtils{
 
   public getUser(){
-    let user: string | null =  localStorage.getItem('shopCheap.user')
-    return user === null ? null :  JSON.parse(user) ;
+    let user: string | null =  localStorage.getItem('shopCheap.user');
+    if(!user || StringUtils.isNullOrEmpty(user)) {
+      this.cleanLocalData();
+      return '';
+    }
+    return  JSON.parse(user) ;
   }
 
   public setLocalUserData(response: any){
@@ -16,7 +22,7 @@ export class LocalStorageUtils{
   }
 
   public getLocalUserToken(): string | null{
-    return localStorage.getItem('shopCheap.user')
+    return localStorage.getItem('shopCheap.token')
   }
 
   private setLocalUserToken(token: string){
@@ -25,5 +31,17 @@ export class LocalStorageUtils{
 
   private setUserOnLocalData(user: string){
     localStorage.setItem('shopCheap.user', JSON.stringify(user));
+  }
+
+  public HasUserLoggedIn(): boolean{
+    if(StringUtils.isNullOrEmpty(localStorage.getItem('shopCheap.user'))) {
+      this.cleanLocalData();
+      return false;
+    }
+    if(StringUtils.isNullOrEmpty(localStorage.getItem('shopCheap.user'))) {
+      this.cleanLocalData();
+      return false;
+    }
+    return true
   }
 }

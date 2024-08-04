@@ -8,6 +8,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFormsModule } from 'ngx-custom-validators';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ErrorInterceptor } from './services/error.handler.service';
+
+export const httpInterceptorProviders = [
+  {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+]
 
 @NgModule({
   declarations: [
@@ -19,9 +26,9 @@ import { ToastrModule } from 'ngx-toastr';
     BrowsingModule,
     NgbModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot(), HttpClientModule,
   ],
-  providers: [CustomFormsModule,],
+  providers: [CustomFormsModule,provideEnvironmentNgxMask(), httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
