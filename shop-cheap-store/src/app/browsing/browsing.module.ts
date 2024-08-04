@@ -7,6 +7,7 @@ import { FooterComponent } from "./footer/footer.component";
 import { NotFoundComponent } from "./not-found/not-found.component";
 import { NgbCollapse } from "@ng-bootstrap/ng-bootstrap";
 import { MenuLoginComponent } from "./menu-login/menu-login.component";
+import { UnauthorizedComponent } from "./unauthorized/unauthorized.component";
 
 @NgModule({
   declarations:[
@@ -14,7 +15,8 @@ import { MenuLoginComponent } from "./menu-login/menu-login.component";
     HomeComponent,
     FooterComponent,
     NotFoundComponent,
-    MenuLoginComponent
+    MenuLoginComponent,
+    UnauthorizedComponent
   ],
   imports:[
     CommonModule, RouterModule, NgbCollapse
@@ -23,7 +25,9 @@ import { MenuLoginComponent } from "./menu-login/menu-login.component";
     MenuComponent,
     HomeComponent,
     FooterComponent,
-    NotFoundComponent],
+    NotFoundComponent,
+    UnauthorizedComponent
+  ],
     providers: [Router]
 })
 export class BrowsingModule{}

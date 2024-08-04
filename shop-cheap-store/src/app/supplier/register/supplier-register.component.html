@@ -1,0 +1,179 @@
+<div class="container main-container">
+
+  <h1>New Supplier</h1>
+
+  <hr>
+  <div class="row">
+    <div class="col-md-10">
+      <form novalidate="novalidate" (ngSubmit)="registerSupplier()" [formGroup]="registerForm">
+
+        <div class="alert alert-danger" *ngIf="errors.length > 0">
+          <h3 id="msgRetorno">Oops! Something isn't right:</h3>
+          <ul>
+            <li *ngFor="let error of errors">{{ error }}</li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Name</label>
+          <div>
+            <input class="form-control" id="name" type="text" placeholder="Name (required)" formControlName="name"
+              [ngClass]="{'is-invalid': displayMessage['name'] }" />
+            <span class="text-danger" *ngIf="displayMessage['name']">
+              <p [innerHTML]="displayMessage['name']"></p>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Document</label>
+          <div>
+            <input class="form-control" id="document" type="text" placeholder="{{documentText}}"
+              formControlName="document" [dropSpecialCharacters]="true" [mask]="supplierType.value == '1' ? MASKS['cpf'].text : MASKS['cnpj'].text"
+              [ngClass]="{'is-invalid': displayMessage['document'] }" />
+
+            <span class="text-danger" *ngIf="displayMessage['document']">
+              <p [innerHTML]="displayMessage['document']"></p>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="supplierType">Supplier Type</label><br>
+          <input type="radio" value=1 id="supplierType" formControlName="supplierType" name="supplierType"> Private
+          Individual<br>
+          <input type="radio" value=2 id="supplierType" formControlName="supplierType" name="supplierType"> Legal
+          entity
+        </div>
+
+        <div class="form-group form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" id="active" formControlName="active" name="active"
+              value="true"> Active?
+          </label>
+        </div>
+
+        <h4>Address</h4>
+        <hr>
+        <div formGroupName="address">
+          <div class="form-group">
+            <label class="control-label">ZipCode</label>
+            <div>
+              <input class="form-control" id="zipCode" type="text" placeholder="ZipCode (required)"
+                formControlName="zipCode"  (blur)="searchCep($event.target)"
+                [dropSpecialCharacters]="true" [mask]="MASKS['cep'].text" [ngClass]="{ 'is-invalid': displayMessage['zipCode'] }" />
+              <span class="text-danger" *ngIf="displayMessage['zipCode']">
+                <p [innerHTML]="displayMessage['zipCode']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Street</label>
+            <div>
+              <input class="form-control" id="street" type="text" placeholder="Street (required)"
+                formControlName="street" [ngClass]="{ 'is-invalid': displayMessage['street'] }" />
+              <span class="text-danger" *ngIf="displayMessage['street']">
+                <p [innerHTML]="displayMessage['street']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">House Number</label>
+            <div>
+              <input class="form-control" id="houseNumber" type="text" placeholder="House Number (required)"
+                formControlName="houseNumber" [ngClass]="{ 'is-invalid': displayMessage['houseNumber'] }" />
+              <span class="text-danger" *ngIf="displayMessage['houseNumber']">
+                <p [innerHTML]="displayMessage['houseNumber']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Additional Address</label>
+            <div>
+              <input class="form-control" id="additionalAddress" type="text" placeholder="Additional Address"
+                formControlName="additionalAddress" [ngClass]="{ 'is-invalid': displayMessage['additionalAddress'] }" />
+              <span class="text-danger" *ngIf="displayMessage['additionalAddress']">
+                <p [innerHTML]="displayMessage['additionalAddress']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Neighborhood</label>
+            <div>
+              <input class="form-control" id="neighborhood" type="text" placeholder="Neighborhood (required)"
+                formControlName="neighborhood" [ngClass]="{ 'is-invalid': displayMessage['neighborhood'] }" />
+              <span class="text-danger" *ngIf="displayMessage['neighborhood']">
+                <p [innerHTML]="displayMessage['neighborhood']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">City</label>
+            <div>
+              <input class="form-control" id="city" type="text" placeholder="City (required)" formControlName="city"
+                [ngClass]="{ 'is-invalid': displayMessage['city'] }" />
+              <span class="text-danger" *ngIf="displayMessage['city']">
+                <p [innerHTML]="displayMessage['city']"></p>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="state" class="control-label">State</label>
+            <div>
+              <select class="form-control" id="state" formControlName="state"
+                [ngClass]="{ 'is-invalid': displayMessage['state'] }">
+                <option value="">Estado</option>
+                <option value="AC">Acre</option>
+                <option value="AL">Alagoas</option>
+                <option value="AP">Amapá</option>
+                <option value="AM">Amazonas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="DF">Distrito Federal</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="GO">Goiás</option>
+                <option value="MA">Maranhão</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="PA">Pará</option>
+                <option value="PB">Paraíba</option>
+                <option value="PR">Paraná</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RO">Rondônia</option>
+                <option value="RR">Roraima</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="SP">São Paulo</option>
+                <option value="SE">Sergipe</option>
+                <option value="TO">Tocantins</option>
+              </select>
+              <span class="text-danger" *ngIf="displayMessage['state']">
+                <p [innerHTML]="displayMessage['state']"></p>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <input type="submit" value="Register" class="btn btn-primary">&nbsp;
+          <a class="btn btn-info" [routerLink]="[ '/supplier/list']">Back</a>
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
+            <p>Valid Form: {{ registerForm.valid }}</p>
+            <p>Touched Form: {{ registerForm.touched }}</p>
+            <p>Dirty Form: {{ registerForm.dirty }}</p><br>
+            <p>Form Result: {{ formResult }}</p>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

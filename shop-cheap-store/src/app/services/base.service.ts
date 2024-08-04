@@ -15,6 +15,15 @@ export abstract class BaseService {
     };
   }
 
+  protected getAuthJSONHeader() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.localStorage.getLocalUserToken()}`
+      })
+    };
+  }
+
   protected extractData(response: any) {
     return response.data || {};
   }
