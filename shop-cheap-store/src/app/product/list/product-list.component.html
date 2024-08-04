@@ -1,0 +1,65 @@
+<div class="container main-container">
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="pacman" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+  </ngx-spinner>
+  <h1>List of Products</h1>
+  <hr>
+
+  <p>
+    <a class="btn btn-info" [routerLink]="['/product/register']">New Product</a>
+  </p>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>
+
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          Supplier
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Active?
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>
+          <img src="{{ product.image }}" style="width: 70px; height: 100px">
+        </td>
+        <td>
+          {{ product.name }}
+        </td>
+        <td>
+          {{ product.supplierName }}
+        </td>
+        <td>
+          {{ product.value }} <!-- | currencyBrazil -->
+
+        </td>
+        <td>
+          <input [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
+        </td>
+        <td class="text-right">
+          <a class="btn btn-warning" [routerLink]="['/product/details',product.id]">
+            <span class="fa fa-search"></span>
+          </a>&nbsp;
+          <a class="btn btn-info" [routerLink]="['/product/edit',product.id]">
+            <span class="fa fa-pencil-alt"></span>
+          </a>&nbsp;
+          <a class="btn btn-danger" [routerLink]="['/product/delete',product.id]">
+            <span class="fa fa-trash"></span>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

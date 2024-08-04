@@ -1,0 +1,87 @@
+<div class="container main-container">
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="pacman" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+  </ngx-spinner>
+  <h3>Edit Product - {{ product.name }}</h3>
+
+  <hr>
+  <div class="row">
+      <div class="col-md-10">
+          <form enctype="multipart/form-data" (ngSubmit)="editProduct()" [formGroup]="productForm">
+
+              <div class="alert alert-danger" *ngIf="errors.length > 0">
+                <h3 id="msgRetorno">Oops! Something isn't right:</h3>
+                  <ul>
+                      <li *ngFor="let error of errors">{{ error }}</li>
+                  </ul>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Supplier</label>
+                  <select class="form-control" id="supplierId" formControlName="supplierId" [ngClass]="{'is-invalid': displayMessage['supplierId'] }">
+                      <option *ngFor="let supplier of suppliers" value="{{ supplier.id }}">{{ supplier.name }}</option>
+                  </select>
+                  <span class="text-danger" *ngIf="displayMessage['supplierId']">
+                      <p [innerHTML]="displayMessage['supplierId']"></p>
+                  </span>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <div>
+                      <input class="form-control" id="name" type="text" placeholder="Name (required)" formControlName="name" [ngClass]="{'is-invalid': displayMessage['name'] }" />
+                      <span class="text-danger" *ngIf="displayMessage['name']">
+                          <p [innerHTML]="displayMessage['name']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <div>
+                      <textarea cols="40" rows="5" maxlength="1000" class="form-control" id="description" placeholder="Description (required)"
+                      formControlName="description" [ngClass]="{'is-invalid': displayMessage['description'] }"></textarea>
+                      <span class="text-danger" *ngIf="displayMessage['description']">
+                          <p [innerHTML]="displayMessage['description']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Image From Product</label>
+
+                  <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="image" formControlName="image" [ngClass]="{'is-invalid': displayMessage['image'] }">
+                      <label data-browse="Procurar" style="width: 400px" class="custom-file-label"></label>
+                      <span class="text-danger" *ngIf="displayMessage['image']">
+                          <p [innerHTML]="displayMessage['image']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Value</label>
+                  <div>
+                      <input class="form-control" id="value" type="text" placeholder="Value (required)" formControlName="value"
+                      number [mask]="MASKS['number'].Mask"
+                       [ngClass]="{'is-invalid': displayMessage['value'] }" />
+                      <span class="text-danger" *ngIf="displayMessage['value']">
+                          <p [innerHTML]="displayMessage['value']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group form-check">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="active" formControlName="active" name="active" value="true"> Active?
+                  </label>
+              </div>
+
+              <div class="form-group">
+                  <input type="submit" [disabled]="!productForm.valid" value="Edit" class="btn btn-primary">&nbsp;
+                  <a class="btn btn-info" href="/product/list">Back</a>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

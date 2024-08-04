@@ -1,0 +1,57 @@
+<div class="container main-container">
+  <h4>Delete {{ product.name }} </h4>
+  <br>
+  <h5>Are you sure about this?</h5>
+
+  <div class="row">
+      <div class="col-md-4">
+          <img src="{{ product.image }}" style="width: 300px; height: 428px">
+      </div>
+      <div class="col-md-6">
+          <dl>
+              <dt>
+                  Supplier
+              </dt>
+              <dd>
+                  {{ product.supplierName }}
+              </dd>
+              <dt>
+                  Name
+              </dt>
+              <dd>
+                  {{ product.name }}
+              </dd>
+              <dt>
+                  Description
+              </dt>
+              <dd>
+                  {{ product.description }}
+              </dd>
+              <dt>
+                  Value
+              </dt>
+              <dd>
+                  {{ product.value  }} <!-- | currencyBrazil -->
+              </dd>
+              <dt>
+                  Registration date
+              </dt>
+              <dd>
+                  {{ product.registrationDate }}<!--  | date:'dd/MM/yyyy' -->
+              </dd>
+              <dt>
+                  Active?
+              </dt>
+              <dd>
+                  <input [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
+              </dd>
+          </dl>
+
+          <div>
+              <a (click)="eraseProduct()" href="javascript:void(0)" class="btn btn-danger">Delete</a>&nbsp;
+              <a class="btn btn-info" href="javascript:window.history.back();">Back</a>
+          </div>
+      </div>
+  </div>
+
+</div>

@@ -3,6 +3,7 @@ import { Supplier, SupplierDto } from '../models/supplier';
 import { SupplierService } from '../services/supplier.service';
 import { MASKS } from 'ng-brazil';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { map, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-supplier-list',
@@ -16,22 +17,19 @@ export class SupplierListComponent {
 
   constructor(private supplierService: SupplierService,
     private spinnerServ: NgxSpinnerService) {
-      this.spinnerServ.show()
+    this.spinnerServ.show()
 
-         }
+  }
 
 
   ngOnInit(): void {
 
     this.supplierService.getAll()
+      .pipe(map(suppliers => suppliers.map(e => new Supplier(e))))
       .subscribe({
         next: suppliers => {
-
-          this.suppliers = suppliers.map((e: SupplierDto) => {
-          return new Supplier (e);})
-
+          this.suppliers = suppliers
           this.spinnerServ.hide()
-
         },
         error: error => this.errorMessage
       });

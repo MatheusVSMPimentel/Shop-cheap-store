@@ -24,6 +24,7 @@
     "bootstrap": "^5.3.2",
     "js-brasil": "^2.6.1",
     "ng-brazil": "^3.0.0",
+    "ngx-brazil": "^18.0.0",
     "ngx-custom-validators": "^11.0.1",
     "ngx-mask": "^18.0.0",
     "ngx-toastr": "^19.0.0",
