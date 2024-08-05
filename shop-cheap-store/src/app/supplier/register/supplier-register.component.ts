@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Supplier, SupplierDto } from '../models/supplier';
 import { SupplierService } from '../services/supplier.service';
 import { Address, AddressViaCepDto } from '../models/address';
-import { NgBrazilValidators, MASKS } from 'ng-brazil';
+import { MASKS, NgxBrazilValidators } from 'ngx-brazil';
 
 @Component({
   selector: 'app-supplier-register',
@@ -81,8 +81,8 @@ export class SupplierRegisterComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.supplierType = new FormControl('2', [])
-    this.supplierDocument = new FormControl('', [Validators.required, NgBrazilValidators.cnpj])
-    this.supplierZipCode = new FormControl('', [Validators.required, NgBrazilValidators.cep])
+    this.supplierDocument = new FormControl('', [Validators.required, NgxBrazilValidators.cnpj])
+    this.supplierZipCode = new FormControl('', [Validators.required, NgxBrazilValidators.cep])
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       document: this.supplierDocument,
@@ -125,13 +125,13 @@ export class SupplierRegisterComponent implements OnInit, AfterViewInit {
   changeDocumentValidation() {
     if (this.supplierType.value === '1') {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cpf]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cpf]);
       this.documentText = 'Document CPF (required)';
 
     }
     else {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cnpj]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cnpj]);
       this.documentText = 'Document CNPJ (required)';
 
     }

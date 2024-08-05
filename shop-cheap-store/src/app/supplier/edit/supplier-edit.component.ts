@@ -7,7 +7,8 @@ import { SupplierService } from '../services/supplier.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { MASKS, NgBrazilValidators } from 'ng-brazil';
+import { MASKS, NgxBrazilValidators } from 'ngx-brazil';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StringUtils } from '../../../utils/string-util';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -36,7 +37,7 @@ export class SupplierEditComponent {
   displayAddressMessage: DisplayMessage = {};
   supplierType: FormControl = new FormControl('');
   supplierDocument!: FormControl;
-  supplierZipCode: FormControl = new FormControl('', [Validators.required, NgBrazilValidators.cep]);
+  supplierZipCode: FormControl = new FormControl('', [Validators.required, NgxBrazilValidators.cep]);
   documentText = 'Document CNPJ (required)';
 
   constructor(private fb: FormBuilder,
@@ -81,7 +82,7 @@ export class SupplierEditComponent {
 
     this.genericValidator = new GenericValidator(this.validationMessages);
     this.supplier = new Supplier(this.route.snapshot.data['supplier']);
-    this.supplierDocument = new FormControl('', [Validators.required, this.supplier.supplierType === 1 ? NgBrazilValidators.cpf : NgBrazilValidators.cnpj])
+    this.supplierDocument = new FormControl('', [Validators.required, this.supplier.supplierType === 1 ? NgxBrazilValidators.cpf : NgxBrazilValidators.cnpj])
 
     setTimeout(()=>{
       this.spinnerServ.hide();
@@ -171,13 +172,13 @@ export class SupplierEditComponent {
   changeDocumentValidation() {
     if (this.supplierType.value === '1') {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cpf]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cpf]);
       this.documentText = 'Document CPF (required)';
 
     }
     else {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cnpj]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cnpj]);
       this.documentText = 'Document CNPJ (required)';
 
     }

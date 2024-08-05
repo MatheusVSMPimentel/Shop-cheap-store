@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Supplier, SupplierDto } from '../models/supplier';
 import { SupplierService } from '../services/supplier.service';
-import { MASKS } from 'ng-brazil';
+import { MASKS } from 'ngx-brazil';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { map, pipe } from 'rxjs';
 

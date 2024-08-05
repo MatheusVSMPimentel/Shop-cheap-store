@@ -3,7 +3,7 @@ import { Supplier } from '../models/supplier';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SupplierService } from '../services/supplier.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MASKS } from 'ng-brazil';
+import { MASKS } from 'ngx-brazil';
 
 
 @Component({
