@@ -17,7 +17,7 @@ export class ProductDeleteComponent {
     private router: Router,
     private toastr: ToastrService) {
 
-    this.product = this.route.snapshot.data['product'];
+    this.product = new Product( this.route.snapshot.data['product']);
   }
 
   public eraseProduct() {

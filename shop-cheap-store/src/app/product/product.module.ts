@@ -6,8 +6,6 @@ import { ProductDetailsComponent } from './details/product-details.component';
 import { ProductEditComponent } from './edit/product-edit.component';
 import { ProductDeleteComponent } from './delete/product-delete.component';
 import { ProductRoutingModule } from './product.routing';
-import { NgBrazil } from 'ng-brazil';
-import { TextMaskModule } from 'angular2-text-mask';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -19,6 +17,8 @@ import { ProductService } from './services/product.service';
 import { ProductAppComponent } from './product.app.component';
 import { NgxBrazil } from 'ngx-brazil';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask, IConfig } from 'ngx-mask';
+import { TextMaskModule } from 'angular-ngx-textmask';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 export const maskConfig: Partial<IConfig> = { };
 
 
@@ -29,12 +29,13 @@ export const maskConfig: Partial<IConfig> = { };
     ProductDetailsComponent,
     ProductEditComponent,
     ProductDeleteComponent,
-    ProductRegisterComponent
+    ProductRegisterComponent,
   ],
   imports: [
     ProductRoutingModule,
     CommonModule, RouterModule, FormsModule, ReactiveFormsModule, SupplierRoutingModule,
-    NgxBrazil , NgxMaskDirective , NgxMaskPipe, NgxSpinnerModule,
+    NgxBrazil , NgxMaskDirective , NgxMaskPipe, NgxSpinnerModule, TextMaskModule,
+    ImageCropperComponent
   ],
   providers: [ProductService, provideNgxMask(), ProductResolve, ProductGuard]
 })

@@ -33,7 +33,7 @@
     <tbody>
       <tr *ngFor="let product of products">
         <td>
-          <img src="{{ product.image }}" style="width: 70px; height: 100px">
+          <img src="{{imagens}}{{ product.image }}" alt="" style="width: 70px; height: 100px">
         </td>
         <td>
           {{ product.name }}
@@ -42,11 +42,11 @@
           {{ product.supplierName }}
         </td>
         <td>
-          {{ product.value }} <!-- | currencyBrazil -->
+          {{ product.value | currencyBrazil: 2}}
 
         </td>
         <td>
-          <input [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
+          <input aria-label="active"  [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
         </td>
         <td class="text-right">
           <a class="btn btn-warning" [routerLink]="['/product/details',product.id]">

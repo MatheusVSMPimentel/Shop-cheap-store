@@ -17,7 +17,7 @@
               </div>
 
               <div class="form-group">
-                  <label class="control-label">Supplier</label>
+                  <label for="supplierId" class="control-label">Supplier</label>
                   <select class="form-control" id="supplierId" formControlName="supplierId" [ngClass]="{'is-invalid': displayMessage['supplierId'] }">
                       <option *ngFor="let supplier of suppliers" value="{{ supplier.id }}">{{ supplier.name }}</option>
                   </select>
@@ -51,19 +51,35 @@
                   <label class="control-label">Image From Product</label>
 
                   <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="image" formControlName="image" [ngClass]="{'is-invalid': displayMessage['image'] }">
-                      <label data-browse="Procurar" style="width: 400px" class="custom-file-label"></label>
-                      <span class="text-danger" *ngIf="displayMessage['image']">
-                          <p [innerHTML]="displayMessage['image']"></p>
-                      </span>
+                    <input  aria-label="image" type="file" class="custom-file-input" id="image"
+                    (change)="fileChangeEvent($event) " accept="image/png,image/jpg"
+                    formControlName="image" [ngClass]="{'is-invalid': displayMessage['image'] }">
+                    <label data-browse="Search" style="width: 400px" class="custom-file-label"></label>
+                    <span *ngIf="cropperSettings.imageName"><br>{{cropperSettings.imageName}}<br></span>
+                    <span class="text-danger" *ngIf="displayMessage['image']">
+                        <p [innerHTML]="displayMessage['image']"></p>
+                    </span>
+                </div>
+
+                <div *ngIf="cropperSettings.imageName" class="row">
+                  <div class="col col-md-6">
+
+                    <image-cropper [imageChangedEvent]="cropperSettings.imageChangedEvent" [maintainAspectRatio]="false" [containWithinAspectRatio]="cropperSettings.containWithinAspectRatio" [aspectRatio]="4 / 3" [resizeToWidth]="256" [cropperMinWidth]="128" [onlyScaleDown]="true" [output]="cropperSettings.output" [roundCropper]="false"
+                    [canvasRotation]="cropperSettings.canvasRotation" [transform]="cropperSettings.transform" [alignImage]="'left'" [style.display]="cropperSettings.showCropper ? null : 'none'" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady($event)"
+                    (loadImageFailed)="loadImageFailed()"></image-cropper>
+
                   </div>
+                  <div class="col col-md-6">
+                    <img  aria-label="img" [src]="cropperSettings.croppedImage" [style.border]="cropperSettings.croppedImage ? '1px solid black' : 'none'" />
+                  </div>
+                </div>
               </div>
 
               <div class="form-group">
                   <label class="control-label">Value</label>
                   <div>
                       <input class="form-control" id="value" type="text" placeholder="Value (required)" formControlName="value"
-                      number [mask]="MASKS['number'].Mask"
+                      currency [textMask]="{ mask: MASKS['currency'].textMask, }"
                        [ngClass]="{'is-invalid': displayMessage['value'] }" />
                       <span class="text-danger" *ngIf="displayMessage['value']">
                           <p [innerHTML]="displayMessage['value']"></p>

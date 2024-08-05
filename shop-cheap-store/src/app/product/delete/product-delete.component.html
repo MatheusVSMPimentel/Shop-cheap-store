@@ -5,7 +5,7 @@
 
   <div class="row">
       <div class="col-md-4">
-          <img src="{{ product.image }}" style="width: 300px; height: 428px">
+          <img alt="img" src="{{imagens}}{{ product.image }}" style="width: 300px; height: 428px">
       </div>
       <div class="col-md-6">
           <dl>
@@ -31,19 +31,19 @@
                   Value
               </dt>
               <dd>
-                  {{ product.value  }} <!-- | currencyBrazil -->
+                  {{ product.value | currencyBrazil: 2  }}
               </dd>
               <dt>
                   Registration date
               </dt>
               <dd>
-                  {{ product.registrationDate }}<!--  | date:'dd/MM/yyyy' -->
+                  {{ product.registrationDate | date:'dd/MM/yyyy' }}
               </dd>
               <dt>
                   Active?
               </dt>
               <dd>
-                  <input [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
+                  <input aria-label="active" [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
               </dd>
           </dl>
 

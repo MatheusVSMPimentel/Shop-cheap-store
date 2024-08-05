@@ -8,6 +8,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MASKS } from 'ngx-brazil';
+import { StringUtils } from '../../../utils/string-util';
+import { Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedSettings } from '../models/imageCropSettings';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-edit',
@@ -28,10 +32,12 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
   genericValidator!: GenericValidator;
   displayMessage: DisplayMessage = {};
   errorMessage!: string;
+  cropperSettings: ImageCroppedSettings = new ImageCroppedSettings();
 
   constructor(private formBuilder: FormBuilder, private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router, private toastr: ToastrService, private spinnerServ: NgxSpinnerService) {
+    private router: Router, private toastr: ToastrService, private spinnerServ: NgxSpinnerService,
+    private sanitizer: DomSanitizer) {
 
     this.spinnerServ.show()
 
@@ -81,7 +87,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
       description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(1000)]],
       imagem: [''],
-      value: ['', [Validators.required]],
+      value: [0, [Validators.required]],
       active: [0]
     });
 
@@ -124,9 +130,9 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
     if (this.productForm.dirty && this.productForm.valid) {
       this.changesNotSaved = false;
 
-      this.product = Object.assign({}, this.product, this.productForm
-        .value);
-
+      this.product = Object.assign({}, this.product, this.productForm.value);
+      this.product.value =  StringUtils.convertToNumber( this.productForm.get('value')?.value+"");
+      console.log(this.product);
       this.productService.updateProduct(new ProductDto(this.product))
         .subscribe({
           next: success => { this.processSuccess(success) },
@@ -139,7 +145,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
 
   processSuccess(response: any) {
     this.errors = [];
-    let toast = this.toastr.success('Supplier update successfully!', 'Successfully!');
+    let toast = this.toastr.success('Product update successfully!', 'Successfully!');
     this.changesNotSaved = false;
 
     if (toast) {
@@ -152,5 +158,29 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
   procesError(fail: any) {
     this.errors = fail.error.errors;
     this.toastr.error('An error occurred ', 'Oops :\'(');
+  }
+
+  //image-cropper
+  fileChangeEvent(event: any): void {
+    this.cropperSettings.imageChangedEvent = event;
+    let target: HTMLInputElement = event.target; // Aqui usamos 'target' em vez de 'currentTarget'
+    if (target && target.files) {
+      this.cropperSettings.imageName = target.files[0].name;
+
+    }
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.objectUrl)
+      this.cropperSettings.imageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
+    this.cropperSettings.croppedImage = event.base64;
+  }
+  imageLoaded() {
+    this.cropperSettings.showCropper = true
+  }
+  cropperReady(sourceImageDimension: Dimensions) {
+    console.log('Cropper ready', sourceImageDimension)
+  }
+  loadImageFailed() {
+    this.errors.push(`The ${this.cropperSettings.imageName} file format isn\'t valid.`)
   }
 }
