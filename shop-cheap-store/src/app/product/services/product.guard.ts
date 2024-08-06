@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
 import { LocalStorageUtils } from '../../../utils/localstorage';
 import { RegisterComponent } from '../../account/register/register.component';
+import { ProductRegisterComponent } from '../register/product-register.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SupplierGuard implements CanActivate, CanDeactivate<RegisterComponent> {
+export class ProductGuard implements CanActivate, CanDeactivate<ProductRegisterComponent> {
   public localStorage = new LocalStorageUtils();
 
   constructor(private router: Router) { }
-  canDeactivate(component: RegisterComponent): boolean {
+  canDeactivate(component: ProductRegisterComponent): boolean {
     if(component.changesNotSaved){
       return window.confirm('Changes aren\'t saved, Do you really want to leave?');
     }

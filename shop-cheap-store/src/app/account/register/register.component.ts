@@ -62,8 +62,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    let password = new FormControl('', [Validators.required, CustomValidators.rangeLength([6,15])]);
-    let confirmPassword = new FormControl('', [CustomValidators.equalTo(password)])
+    let password = new FormControl<string>( {value: '', disabled: false}, [Validators.required, CustomValidators.rangeLength([6,15])]);
+    let confirmPassword = new FormControl('')
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: password,

@@ -4,7 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Supplier } from '../models/supplier';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MASKS } from 'ng-brazil';
+import { MASKS } from 'ngx-brazil';
 
 @Component({
   selector: 'app-supplier-delete',

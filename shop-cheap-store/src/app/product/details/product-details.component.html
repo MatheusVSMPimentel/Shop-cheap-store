@@ -1,0 +1,58 @@
+<div class="container main-container">
+  <h1>Details product: {{ product.name }}</h1>
+  <br>
+  <h4>Readonly Informations</h4>
+
+
+  <div class="row">
+      <div class="col-md-4">
+          <img alt="img" src="{{imagens}}{{product.image}}" style="width: 300px; height: 428px">
+      </div>
+      <div class="col-md-6">
+          <dl>
+              <dt>
+                  Supplier
+              </dt>
+              <dd>
+                  {{ product.supplierName }}
+              </dd>
+              <dt>
+                  Name
+              </dt>
+              <dd>
+                  {{ product.name }}
+              </dd>
+              <dt>
+                  Description
+              </dt>
+              <dd>
+                  {{ product.description }}
+              </dd>
+              <dt>
+                  Value
+              </dt>
+              <dd>
+                  {{ product.value | currencyBrazil  : 2 }} <!-- | currencyBrazil -->
+              </dd>
+              <dt>
+                  Registration date
+              </dt>
+              <dd>
+                  {{ product.registrationDate | date:'dd/MM/yyyy' }}
+              </dd>
+              <dt>
+                  Active?
+              </dt>
+              <dd>
+                  <input aria-label="active" [checked]="product.active" class="check-box" disabled="disabled" type="checkbox">
+              </dd>
+          </dl>
+
+          <div>
+              <a class="btn btn-warning" [routerLink]="['/product/edit',product.id]">Edit</a>&nbsp;
+              <a class="btn btn-info" href="javascript:window.history.back();">Back</a>
+          </div>
+      </div>
+  </div>
+
+</div>

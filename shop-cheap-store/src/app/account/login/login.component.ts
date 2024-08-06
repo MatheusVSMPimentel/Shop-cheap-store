@@ -5,7 +5,7 @@ import { AccountService } from '../services/account.service';
 import { DisplayMessage, GenericValidator, ValidationMessages } from '../../../utils/generic-validator';
 import { CustomValidators } from 'ngx-custom-validators';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   validationMessages!: ValidationMessages;
   genericValidator!: GenericValidator ;
   displayMessage: DisplayMessage = {};
-
+  returnUrl!: string;
   constructor (private formBuilder: FormBuilder, private accountService: AccountService,
-    private router: Router, private toastr: ToastrService
+    private router: Router, private acRoute: ActivatedRoute, private toastr: ToastrService
   ){
     this.validationMessages = {
       email:{
@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         rangeLength: 'The field password needs to have a length between 6 to 15 chars'
       }
     }
-
-    this.genericValidator = new GenericValidator(this.validationMessages)
+    this.returnUrl= this.acRoute.snapshot.queryParams['returnUrl'];
+    this.genericValidator = new GenericValidator(this.validationMessages);
   }
 
   ngAfterViewInit(): void {
@@ -77,11 +77,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   successOnRegister(response: any){
     this.loginForm.reset();
     this.errors = [];
-
+    let routeNavigate = this.returnUrl ?? '/home';
     this.accountService.localStorage.setLocalUserData(response);
     let toast = this.toastr.success('Your registration has been successful', 'Welcome!! :D')
     if(toast){
-      toast.onHidden.subscribe(()=>this.router.navigate(['/home']))
+      toast.onHidden.subscribe(()=>this.router.navigate([routeNavigate]))
     }
 
   }

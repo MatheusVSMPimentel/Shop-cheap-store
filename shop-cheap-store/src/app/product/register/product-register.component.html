@@ -1,0 +1,102 @@
+<div class="container main-container">
+
+  <h3>New Product </h3>
+
+  <hr>
+  <div class="row">
+      <div class="col-md-10">
+          <form enctype="multipart/form-data" (ngSubmit)="createProduct()" [formGroup]="productForm">
+
+              <div class="alert alert-danger" *ngIf="errors.length > 0">
+                <h3 id="msgRetorno">Oops! Something isn't right:</h3>
+
+                  <ul>
+                      <li *ngFor="let error of errors">{{ error }}</li>
+                  </ul>
+              </div>
+
+              <div class="form-group">
+                  <label for="supplierId" class="control-label">Supplier</label>
+                  <select class="form-control" id="supplierId" formControlName="supplierId" [ngClass]="{'is-invalid': displayMessage['supplierId'] }">
+                      <option *ngFor="let supplier of suppliers" value="{{ supplier.id }}">{{ supplier.name }}</option>
+                  </select>
+                  <span class="text-danger" *ngIf="displayMessage['supplierId']">
+                      <p [innerHTML]="displayMessage['supplierId']"></p>
+                  </span>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <div>
+                      <input class="form-control" id="name" type="text" placeholder="Name (required)" formControlName="name" [ngClass]="{'is-invalid': displayMessage['name'] }" />
+                      <span class="text-danger" *ngIf="displayMessage['name']">
+                          <p [innerHTML]="displayMessage['name']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <div>
+                      <textarea cols="40" rows="5" maxlength="1000" class="form-control" id="description" placeholder="Description (required)" formControlName="description"
+                      [ngClass]="{'is-invalid': displayMessage['description'] }"></textarea>
+                      <span class="text-danger" *ngIf="displayMessage['description']">
+                          <p [innerHTML]="displayMessage['description']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="control-label">Image from Product</label>
+
+                  <div class="custom-file">
+                      <input  aria-label="image" type="file" class="custom-file-input" id="image"
+                      (change)="fileChangeEvent($event) " accept="image/png,image/jpg"
+                      formControlName="image" [ngClass]="{'is-invalid': displayMessage['image'] }">
+                      <label data-browse="Search" style="width: 400px" class="custom-file-label"></label>
+                      <span *ngIf="cropperSettings.imageName"><br>{{cropperSettings.imageName}}<br></span>
+                      <span class="text-danger" *ngIf="displayMessage['image']">
+                          <p [innerHTML]="displayMessage['image']"></p>
+                      </span>
+                  </div>
+
+                  <div *ngIf="cropperSettings.imageName" class="row">
+                    <div class="col col-md-6">
+
+                      <image-cropper [imageChangedEvent]="cropperSettings.imageChangedEvent" [maintainAspectRatio]="false" [containWithinAspectRatio]="cropperSettings.containWithinAspectRatio" [aspectRatio]="4 / 3" [resizeToWidth]="256" [cropperMinWidth]="128" [onlyScaleDown]="true" [output]="cropperSettings.output" [roundCropper]="false"
+                      [canvasRotation]="cropperSettings.canvasRotation" [transform]="cropperSettings.transform" [alignImage]="'left'" [style.display]="cropperSettings.showCropper ? null : 'none'" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady($event)"
+                      (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+                    </div>
+                    <div class="col col-md-6">
+                      <img  aria-label="img" [src]="cropperSettings.croppedImage" [style.border]="cropperSettings.croppedImage ? '1px solid black' : 'none'" />
+                    </div>
+                  </div>
+
+              </div>
+
+              <div  class="form-group">
+                  <label class="control-label">Value</label>
+                  <div>
+                      <input class="form-control" id="value" type="text" placeholder="Value (required)" formControlName="value"
+                      [textMask]=" {mask:MASKS['currency'].textMask}" [ngClass]="{'is-invalid': displayMessage['value'] }" />
+                      <span class="text-danger" *ngIf="displayMessage['value']">
+                          <p [innerHTML]="displayMessage['value']"></p>
+                      </span>
+                  </div>
+              </div>
+
+              <div class="form-group form-check">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="active" formControlName="active" name="active" value="true"> Active?
+                  </label>
+              </div>
+
+              <div class="form-group">
+                  <input type="submit" [disabled]="!productForm.valid" value="Register" class="btn btn-primary">&nbsp;
+                  <a class="btn btn-info" href="/product/list">Back</a>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

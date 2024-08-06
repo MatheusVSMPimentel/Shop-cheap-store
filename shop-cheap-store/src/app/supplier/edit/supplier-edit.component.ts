@@ -7,7 +7,8 @@ import { SupplierService } from '../services/supplier.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { MASKS, NgBrazilValidators } from 'ng-brazil';
+import { MASKS, NgxBrazilValidators } from 'ngx-brazil';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StringUtils } from '../../../utils/string-util';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -28,14 +29,15 @@ export class SupplierEditComponent {
   address: Address = new Address();
   public MASKS = MASKS
   formResult = '';
-  changesNotSaved!: boolean;
+  changesSupplierNotSaved!: boolean;
+  changesAddressNotSaved!: boolean;
   validationMessages!: ValidationMessages;
   genericValidator!: GenericValidator;
   displayMessage: DisplayMessage = {};
   displayAddressMessage: DisplayMessage = {};
   supplierType: FormControl = new FormControl('');
   supplierDocument!: FormControl;
-  supplierZipCode: FormControl = new FormControl('', [Validators.required, NgBrazilValidators.cep]);
+  supplierZipCode: FormControl = new FormControl('', [Validators.required, NgxBrazilValidators.cep]);
   documentText = 'Document CNPJ (required)';
 
   constructor(private fb: FormBuilder,
@@ -80,7 +82,7 @@ export class SupplierEditComponent {
 
     this.genericValidator = new GenericValidator(this.validationMessages);
     this.supplier = new Supplier(this.route.snapshot.data['supplier']);
-    this.supplierDocument = new FormControl('', [Validators.required, this.supplier.supplierType === 1 ? NgBrazilValidators.cpf : NgBrazilValidators.cnpj])
+    this.supplierDocument = new FormControl('', [Validators.required, this.supplier.supplierType === 1 ? NgxBrazilValidators.cpf : NgxBrazilValidators.cnpj])
 
     setTimeout(()=>{
       this.spinnerServ.hide();
@@ -116,9 +118,14 @@ export class SupplierEditComponent {
       this.changeDocumentValidation();
       this.configValidationElements();
       this.supplierDocument.setValue(this.supplierDocument.value)
-      this.formValidate();
-    })
-    this.configValidationElements()
+      this.formSupplierValidate();
+    });
+    this.editAddressForm.valueChanges.subscribe(
+    () => {
+      this.configValidationElements();
+      this.formAddressValidate();
+    });
+    this.configValidationElements();
   }
 
   setupSupplierForm() {
@@ -126,7 +133,8 @@ export class SupplierEditComponent {
     this.supplierType.setValue(this.supplier.supplierType.toString());
     this.editAddressForm.patchValue(this.supplier.address);
     this.editAddressForm.markAsDirty();
-    this.formValidate();
+    this.formSupplierValidate();
+    this.formAddressValidate();
   }
 
   configValidationElements() {
@@ -135,31 +143,42 @@ export class SupplierEditComponent {
     let controlDigits: Observable<any>[] = this.formInputElements
       .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'keyup'));
 
+
     merge(...controlDigits).subscribe(() => {
-      this.formValidate()
+      this.formSupplierValidate()
+      this.formAddressValidate();
+
     })
 
     merge(...controlBlurs).subscribe(() => {
-      this.formValidate()
+      this.formSupplierValidate()
+      this.formAddressValidate();
+
     })
+
+
   }
 
-  formValidate() {
+  formSupplierValidate() {
     this.displayMessage = this.genericValidator.messageProcessing(this.editSupplierForm);
+    this.changesSupplierNotSaved = true;
+  }
+
+  formAddressValidate() {
     this.displayAddressMessage = this.genericValidator.messageProcessing(this.editAddressForm);
-    this.changesNotSaved = true;
+    this.changesAddressNotSaved = true;
   }
 
   changeDocumentValidation() {
     if (this.supplierType.value === '1') {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cpf]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cpf]);
       this.documentText = 'Document CPF (required)';
 
     }
     else {
       this.supplierDocument.clearValidators();
-      this.supplierDocument.setValidators([Validators.required, NgBrazilValidators.cnpj]);
+      this.supplierDocument.setValidators([Validators.required, NgxBrazilValidators.cnpj]);
       this.documentText = 'Document CNPJ (required)';
 
     }
@@ -180,13 +199,13 @@ export class SupplierEditComponent {
 
   setupAddressForm(address: AddressViaCepDto) {
     address.cep = this.supplierZipCode.value
-    this.editAddressForm.patchValue({
-      address: new Address(undefined, address)
-    })
+    this.editAddressForm.patchValue( new Address(undefined, address)
+    )
   }
 
   editSupplier() {
     if (this.editSupplierForm.dirty && this.editSupplierForm.valid) {
+      this.changesSupplierNotSaved = false;
 
       this.supplier = Object.assign({}, this.supplier, this.editSupplierForm
         .value);
@@ -194,12 +213,10 @@ export class SupplierEditComponent {
 
       this.supplierService.updateSupplier(new SupplierDto(this.supplier))
         .subscribe({
-          next: sucesso => { this.processSuccess(sucesso) },
-          error: falha => { this.procesError(falha) }
+          next: success => { this.processSuccess(success) },
+          error: failure => { this.procesError(failure) }
         }
         );
-
-      this.changesNotSaved = false;
     }
   }
 
@@ -210,8 +227,8 @@ export class SupplierEditComponent {
         this.address.supplierId = this.supplier.id;
       this.supplierService.updateAddress(new AddressDto(this.address))
         .subscribe({
-          next: sucesso => { this.processAddressUpdateSuccess(sucesso);  },
-          error: falha => { this.procesError(falha) }
+          next: success => { this.processAddressUpdateSuccess(success);  },
+          error: faluire => { this.procesError(faluire) }
         }
         );
 
@@ -223,7 +240,7 @@ export class SupplierEditComponent {
     let toast = this.toastr.success('Supplier update successfully!', 'Successfully!');
     this.supplier.address = new Address(response);
     this.modalService.dismissAll();
-    this.changesNotSaved = false;
+    this.changesAddressNotSaved = false;
 
     if (toast) {
       toast.onHidden.subscribe(() => {
@@ -234,7 +251,7 @@ export class SupplierEditComponent {
   processSuccess(response: any) {
     this.errors = [];
     let toast = this.toastr.success('Supplier update successfully!', 'Successfully!');
-    this.changesNotSaved = false;
+    this.changesSupplierNotSaved = false;
 
     if (toast) {
       toast.onHidden.subscribe(() => {

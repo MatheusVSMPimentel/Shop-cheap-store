@@ -13,18 +13,19 @@ import { SupplierService } from './services/supplier.service';
 import { HttpClientModule } from '@angular/common/http';
 
 import { TextMaskModule } from 'angular2-text-mask';
-import { MASKS, NgBrazil, TextMask } from 'ng-brazil'
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { SupplierResolve } from './services/supplier.resolve';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SupplierGuard } from './services/supplier.guard';
+import { NgxBrazil } from 'ngx-brazil';
+import { ProductsSupplierListComponent } from './products/products-supplier-list.component';
 
 @NgModule({
-  declarations: [SupplierAppComponent, SupplierRegisterComponent, SupplierListComponent, SupplierDeleteComponent, SupplierEditComponent, SupplierDetailsComponent],
+  declarations: [SupplierAppComponent, SupplierRegisterComponent, SupplierListComponent, SupplierDeleteComponent, SupplierEditComponent, SupplierDetailsComponent, ProductsSupplierListComponent],
   imports: [
     CommonModule, RouterModule, FormsModule, ReactiveFormsModule, SupplierRoutingModule,
-    NgBrazil ,NgxMaskDirective , NgxMaskPipe, NgxSpinnerModule,
+    NgxBrazil ,NgxMaskDirective , NgxMaskPipe, NgxSpinnerModule,
   ],
   providers:[SupplierService, provideNgxMask(), SupplierResolve, SupplierGuard]
 
