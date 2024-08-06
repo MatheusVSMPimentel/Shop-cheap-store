@@ -16,7 +16,8 @@ export class ProductListComponent {
   public products!: Product[];
   errorMessage!: string;
   public MASKS = MASKS
-  imagens: string = environment.apiImagesUrlv1
+  images: string = environment.apiImagesUrlv1
+  currentlyImageSrc !: string;
 
   constructor(private productService: ProductService,
     private spinnerServ: NgxSpinnerService) {

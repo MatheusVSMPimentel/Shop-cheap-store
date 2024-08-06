@@ -20,7 +20,7 @@ export class ProductGuard implements CanActivate, CanDeactivate<ProductRegisterC
 
   canActivate(routeAc: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!this.localStorage.HasUserLoggedIn()) {
-      this.router.navigate(['/account/login']);
+      this.router.navigate(['/account/login'],{queryParams: { returnUrl: this.router.url}});
       return false;
     }
 

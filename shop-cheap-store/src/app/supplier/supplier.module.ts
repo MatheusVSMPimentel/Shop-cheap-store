@@ -19,9 +19,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SupplierGuard } from './services/supplier.guard';
 import { NgxBrazil } from 'ngx-brazil';
+import { ProductsSupplierListComponent } from './products/products-supplier-list.component';
 
 @NgModule({
-  declarations: [SupplierAppComponent, SupplierRegisterComponent, SupplierListComponent, SupplierDeleteComponent, SupplierEditComponent, SupplierDetailsComponent],
+  declarations: [SupplierAppComponent, SupplierRegisterComponent, SupplierListComponent, SupplierDeleteComponent, SupplierEditComponent, SupplierDetailsComponent, ProductsSupplierListComponent],
   imports: [
     CommonModule, RouterModule, FormsModule, ReactiveFormsModule, SupplierRoutingModule,
     NgxBrazil ,NgxMaskDirective , NgxMaskPipe, NgxSpinnerModule,

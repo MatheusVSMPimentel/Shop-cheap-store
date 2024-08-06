@@ -19,7 +19,7 @@ export class SupplierGuard implements CanActivate, CanDeactivate<RegisterCompone
 
   canActivate(routeAc: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!this.localStorage.HasUserLoggedIn()) {
-      this.router.navigate(['/account/login']);
+      this.router.navigate(['/account/login'],{queryParams: { returnUrl: this.router.url}});
       return false;
     }
 

@@ -13,7 +13,7 @@ export class ImageCroppedSettings{
   showCropper = false;
   containWithinAspectRatio = false;
   transform: ImageTransform = {};
-  public output: 'base64';
+  output: 'base64';
   imageUrl!: SafeUrl;
   imageName!: string;
 }

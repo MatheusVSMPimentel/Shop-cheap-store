@@ -17,5 +17,17 @@ export class StringUtils {
     // Converte a string em um número
     return parseFloat(number);
   }
+
+  public static DecimalToString(input:number): any {
+    var ret = (input) ? input.toString().replace(".", ",") : null;
+    if (ret) {
+        var decArr = ret.split(",");
+        if (decArr.length > 1) {
+            var dec = decArr[1].length;
+            if (dec === 1) { ret += "0"; }
+        }
+    }
+    return ret;
+}
 }
 

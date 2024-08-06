@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/product';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-details',
@@ -9,6 +10,7 @@ import { Product } from '../models/product';
 })
 export class ProductDetailsComponent {
   product: Product;
+  imagens: string = environment.apiImagesUrlv1
 
   constructor(
     private route: ActivatedRoute,

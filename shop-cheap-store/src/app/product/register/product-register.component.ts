@@ -126,8 +126,10 @@ export class ProductRegisterComponent {
       this.product = Object.assign({}, this.product, this.productForm
         .value);
       this.product.imageUpload = this.cropperSettings.croppedImage.split(',')[1];
-      this.product.image = this.cropperSettings.imageName.substring(0,20);
+      let imageNameArray = this.cropperSettings.imageName.split('.');
+      this.product.image = this.cropperSettings.imageName.substring(0,20)+'.'+imageNameArray[imageNameArray.length -1];
       this.product.value = StringUtils.convertToNumber(this.productForm.get('value')?.value);
+      console.log(this.product);
       this.productService.registerProduct(new ProductDto(this.product))
         .subscribe({
           next: success => { this.processSuccess(success) },

@@ -17,7 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor
         if(error instanceof HttpErrorResponse){
           if(error.status ===401){
             this.localStorage.cleanLocalData();
-            this.route.navigate(['account/login'])
+            this.route.navigate(['account/login'],{queryParams: { returnUrl: this.route.url}})
           }
           if(error.status ===403){
             this.route.navigate(['unauthorized'])

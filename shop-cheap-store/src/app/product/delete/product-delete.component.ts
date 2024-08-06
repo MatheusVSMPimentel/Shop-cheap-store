@@ -3,6 +3,7 @@ import { Product } from '../models/product';
 import { ProductService } from '../services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-delete',
@@ -11,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProductDeleteComponent {
   product: Product;
+  imagens: string = environment.apiImagesUrlv1
 
   constructor(private produtoService: ProductService,
     private route: ActivatedRoute,

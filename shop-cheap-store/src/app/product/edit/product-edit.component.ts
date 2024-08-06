@@ -12,6 +12,7 @@ import { StringUtils } from '../../../utils/string-util';
 import { Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageCroppedSettings } from '../models/imageCropSettings';
 import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-edit',
@@ -19,6 +20,8 @@ import { DomSanitizer } from '@angular/platform-browser';
   styles: ``
 })
 export class ProductEditComponent implements OnInit, AfterViewInit {
+  images: string = environment.apiImagesUrlv1
+
   @ViewChildren
     (FormControlName, { read: ElementRef }) formInputElements !: ElementRef[];
   public MASKS = MASKS;
@@ -32,7 +35,8 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
   genericValidator!: GenericValidator;
   displayMessage: DisplayMessage = {};
   errorMessage!: string;
-  cropperSettings: ImageCroppedSettings = new ImageCroppedSettings();
+  imgProperties: ImageCroppedSettings = new ImageCroppedSettings();
+  currentlyImageSrc !: string;
 
   constructor(private formBuilder: FormBuilder, private productService: ProductService,
     private route: ActivatedRoute,
@@ -67,7 +71,8 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
     this.genericValidator = new GenericValidator(this.validationMessages);
 
     this.product = new Product(this.route.snapshot.data['product']);
-
+    this.imgProperties.imageName = this.product.image;
+    this.currentlyImageSrc = this.images + this.product.image;
   }
 
   //angular
@@ -86,7 +91,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       supplierId: ['', [Validators.required]],
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
       description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(1000)]],
-      imagem: [''],
+      image: [''],
       value: [0, [Validators.required]],
       active: [0]
     });
@@ -97,7 +102,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       name: this.product.name,
       description: this.product.description,
       active: this.product.active,
-      value: this.product.value
+      value: StringUtils.DecimalToString( this.product.value)
     });
   }
 
@@ -131,7 +136,17 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       this.changesNotSaved = false;
 
       this.product = Object.assign({}, this.product, this.productForm.value);
-      this.product.value =  StringUtils.convertToNumber( this.productForm.get('value')?.value+"");
+      console.log(this.imgProperties.croppedImage)
+      if (this.imgProperties.croppedImage) {
+        this.product.imageUpload = this.imgProperties.croppedImage;
+        let imageNameArray = this.imgProperties.imageName.split('.');
+        this.product.image = imageNameArray.length > 20?
+         this.imgProperties.imageName.substring(0, 20) + '.' + imageNameArray[imageNameArray.length - 1]:
+         this.imgProperties.imageName;
+
+      }
+
+      this.product.value = StringUtils.convertToNumber(this.productForm.get('value')?.value + "");
       console.log(this.product);
       this.productService.updateProduct(new ProductDto(this.product))
         .subscribe({
@@ -160,27 +175,18 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
     this.toastr.error('An error occurred ', 'Oops :\'(');
   }
 
-  //image-cropper
-  fileChangeEvent(event: any): void {
-    this.cropperSettings.imageChangedEvent = event;
-    let target: HTMLInputElement = event.target; // Aqui usamos 'target' em vez de 'currentTarget'
-    if (target && target.files) {
-      this.cropperSettings.imageName = target.files[0].name;
+  //image manipulation
+  upload(file: any) {
+    this.imgProperties.imageName = file[0].name;
 
-    }
+    var reader = new FileReader();
+    reader.onload = this.readerProcessflow.bind(this);
+    reader.readAsBinaryString(file[0])
   }
-  imageCropped(event: ImageCroppedEvent) {
-    if (event.objectUrl)
-      this.cropperSettings.imageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
-    this.cropperSettings.croppedImage = event.base64;
-  }
-  imageLoaded() {
-    this.cropperSettings.showCropper = true
-  }
-  cropperReady(sourceImageDimension: Dimensions) {
-    console.log('Cropper ready', sourceImageDimension)
-  }
-  loadImageFailed() {
-    this.errors.push(`The ${this.cropperSettings.imageName} file format isn\'t valid.`)
+
+  readerProcessflow(readerEvt: any) {
+    var binaryString = readerEvt.target.result;
+    this.imgProperties.croppedImage = btoa(binaryString);
+    this.imgProperties.imageUrl = "data:image/jpeg;base64," + this.imgProperties.croppedImage
   }
 }
