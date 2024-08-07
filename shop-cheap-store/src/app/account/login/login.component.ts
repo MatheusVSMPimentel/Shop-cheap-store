@@ -7,25 +7,25 @@ import { CustomValidators } from 'ngx-custom-validators';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { FormBaseComponent } from '../../base-components/form-base.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent extends FormBaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, {read: ElementRef} ) formInputElements !: ElementRef[];
 
   errors: any[] = [];
   loginForm !: FormGroup;
   user!: User;
-  validationMessages!: ValidationMessages;
-  genericValidator!: GenericValidator ;
-  displayMessage: DisplayMessage = {};
   returnUrl!: string;
+
   constructor (private formBuilder: FormBuilder, private accountService: AccountService,
     private router: Router, private acRoute: ActivatedRoute, private toastr: ToastrService
   ){
+    super();
     this.validationMessages = {
       email:{
         required: 'The field e-mail is required.',
@@ -37,22 +37,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
       }
     }
     this.returnUrl= this.acRoute.snapshot.queryParams['returnUrl'];
-    this.genericValidator = new GenericValidator(this.validationMessages);
+    super.settingUpMessagesValidation(this.validationMessages)
   }
 
   ngAfterViewInit(): void {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-    let controlDigits: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'keyup'));
-
-    merge(...controlDigits).subscribe(() => {
-      this.displayMessage = this.genericValidator.messageProcessing(this.loginForm);
-    })
-
-    merge(...controlBlurs).subscribe(() => {
-      this.displayMessage = this.genericValidator.messageProcessing(this.loginForm);
-    })
+    super.settingUpFormValidation(this.formInputElements,[this.loginForm]);
   }
 
   ngOnInit(): void {

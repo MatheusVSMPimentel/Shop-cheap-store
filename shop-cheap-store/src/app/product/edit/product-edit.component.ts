@@ -13,28 +13,19 @@ import { Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageCroppedSettings } from '../models/imageCropSettings';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
+import { ProductFormBaseComponent } from '../form-base/product-form.base.component';
 
 @Component({
   selector: 'app-product-edit',
   templateUrl: './product-edit.component.html',
   styles: ``
 })
-export class ProductEditComponent implements OnInit, AfterViewInit {
+export class ProductEditComponent extends ProductFormBaseComponent implements OnInit, AfterViewInit {
   images: string = environment.apiImagesUrlv1
 
   @ViewChildren
     (FormControlName, { read: ElementRef }) formInputElements !: ElementRef[];
-  public MASKS = MASKS;
-  errors: any[] = [];
-  productForm !: FormGroup;
-  formResult = '';
-  product!: Product;
-  suppliers!: Supplier[];
-  changesNotSaved!: boolean;
-  validationMessages!: ValidationMessages;
-  genericValidator!: GenericValidator;
-  displayMessage: DisplayMessage = {};
-  errorMessage!: string;
+
   imgProperties: ImageCroppedSettings = new ImageCroppedSettings();
   currentlyImageSrc !: string;
 
@@ -42,33 +33,8 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router, private toastr: ToastrService, private spinnerServ: NgxSpinnerService,
     private sanitizer: DomSanitizer) {
-
+    super();
     this.spinnerServ.show()
-
-    this.validationMessages = {
-      supplierId: {
-        required: 'Choose a supplier.',
-      },
-      name: {
-        required: 'Enter the product name.',
-        minlength: 'Minimum 2 characters.',
-        maxlength: 'Maximum 200 characters.'
-      },
-      description: {
-        required: 'Informe a Descrição',
-        minlength: 'Minimum 2 characters',
-        maxlength: 'Maximum 1000 characters.'
-      },
-      image: {
-        required: 'Insert an Image.',
-      },
-      value: {
-        required: 'Insert an amount',
-      }
-
-    };
-
-    this.genericValidator = new GenericValidator(this.validationMessages);
 
     this.product = new Product(this.route.snapshot.data['product']);
     this.imgProperties.imageName = this.product.image;
@@ -102,34 +68,14 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       name: this.product.name,
       description: this.product.description,
       active: this.product.active,
-      value: StringUtils.DecimalToString( this.product.value)
+      value: StringUtils.DecimalToString(this.product.value)
     });
   }
 
   ngAfterViewInit() {
-    this.configValidationElements();
+    super.configurateValidationForm(this.formInputElements);
   }
 
-  //display function
-  configValidationElements() {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-    let controlDigits: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'keyup'));
-
-    merge(...controlDigits).subscribe(() => {
-      this.formValidate()
-    })
-
-    merge(...controlBlurs).subscribe(() => {
-      this.formValidate()
-    })
-  }
-
-  formValidate() {
-    this.displayMessage = this.genericValidator.messageProcessing(this.productForm);
-    this.changesNotSaved = true;
-  }
   //service
   editProduct() {
     if (this.productForm.dirty && this.productForm.valid) {
@@ -140,9 +86,9 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       if (this.imgProperties.croppedImage) {
         this.product.imageUpload = this.imgProperties.croppedImage;
         let imageNameArray = this.imgProperties.imageName.split('.');
-        this.product.image = imageNameArray.length > 20?
-         this.imgProperties.imageName.substring(0, 20) + '.' + imageNameArray[imageNameArray.length - 1]:
-         this.imgProperties.imageName;
+        this.product.image = imageNameArray.length > 20 ?
+          this.imgProperties.imageName.substring(0, 20) + '.' + imageNameArray[imageNameArray.length - 1] :
+          this.imgProperties.imageName;
 
       }
 

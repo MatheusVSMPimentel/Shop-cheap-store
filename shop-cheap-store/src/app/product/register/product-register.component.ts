@@ -12,62 +12,25 @@ import { ImageCropperComponent, ImageCroppedEvent, LoadedImage, Dimensions } fro
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageCroppedSettings } from '../models/imageCropSettings';
 import { StringUtils } from '../../../utils/string-util';
+import { ProductFormBaseComponent } from '../form-base/product-form.base.component';
 
 @Component({
   selector: 'app-product-register',
   templateUrl: './product-register.component.html',
   styles: ``
 })
-export class ProductRegisterComponent {
+export class ProductRegisterComponent extends ProductFormBaseComponent {
 
   @ViewChildren
     (FormControlName, { read: ElementRef }) formInputElements !: ElementRef[];
-  public MASKS = MASKS
-  errors: any[] = [];
-  productForm !: FormGroup;
-  formResult = '';
-  product!: Product;
-  suppliers!: Supplier[];
-  changesNotSaved!: boolean;
-  validationMessages!: ValidationMessages;
-  genericValidator!: GenericValidator;
-  displayMessage: DisplayMessage = {};
-  errorMessage!: string;
 
   cropperSettings: ImageCroppedSettings = new ImageCroppedSettings();
 
   constructor(private formBuilder: FormBuilder, private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router, private toastr: ToastrService, private spinnerServ: NgxSpinnerService,
+    private router: Router, private toastr: ToastrService,
     private sanitizer: DomSanitizer) {
-
-    this.spinnerServ.show()
-
-    this.validationMessages = {
-      supplierId: {
-        required: 'Choose a supplier.',
-      },
-      name: {
-        required: 'Enter the product name.',
-        minlength: 'Minimum 2 characters.',
-        maxlength: 'Maximum 200 characters.'
-      },
-      description: {
-        required: 'Informe a Descrição',
-        minlength: 'Minimum 2 characters',
-        maxlength: 'Maximum 1000 characters.'
-      },
-      image: {
-        required: 'Insert an Image.',
-      },
-      value: {
-        required: 'Insert an amount',
-      }
-
-    };
-
-    this.genericValidator = new GenericValidator(this.validationMessages);
-
+    super();
   }
 
   //angular
@@ -78,7 +41,6 @@ export class ProductRegisterComponent {
       .subscribe({
         next: suppliers => {
           this.suppliers = suppliers
-          this.spinnerServ.hide()
         },
         error: error => this.errorMessage
       });
@@ -95,29 +57,9 @@ export class ProductRegisterComponent {
   }
 
   ngAfterViewInit() {
-    this.configValidationElements();
+    super.configurateValidationForm(this.formInputElements);
   }
 
-  //display function
-  configValidationElements() {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-    let controlDigits: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'keyup'));
-
-    merge(...controlDigits).subscribe(() => {
-      this.formValidate()
-    })
-
-    merge(...controlBlurs).subscribe(() => {
-      this.formValidate()
-    })
-  }
-
-  formValidate() {
-    this.displayMessage = this.genericValidator.messageProcessing(this.productForm);
-    this.changesNotSaved = true;
-  }
   //service
   createProduct() {
     if (this.productForm.dirty && this.productForm.valid) {
@@ -127,7 +69,7 @@ export class ProductRegisterComponent {
         .value);
       this.product.imageUpload = this.cropperSettings.croppedImage.split(',')[1];
       let imageNameArray = this.cropperSettings.imageName.split('.');
-      this.product.image = this.cropperSettings.imageName.substring(0,20)+'.'+imageNameArray[imageNameArray.length -1];
+      this.product.image = this.cropperSettings.imageName.substring(0, 20) + '.' + imageNameArray[imageNameArray.length - 1];
       this.product.value = StringUtils.convertToNumber(this.productForm.get('value')?.value);
       console.log(this.product);
       this.productService.registerProduct(new ProductDto(this.product))

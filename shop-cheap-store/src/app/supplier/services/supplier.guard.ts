@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
-import { LocalStorageUtils } from '../../../utils/localstorage';
+import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router,  } from '@angular/router';
 import { RegisterComponent } from '../../account/register/register.component';
+import { BaseGuard } from '../../services/base.guard';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SupplierGuard implements CanActivate, CanDeactivate<RegisterComponent> {
-  public localStorage = new LocalStorageUtils();
+export class SupplierGuard extends BaseGuard implements CanActivate, CanDeactivate<RegisterComponent> {
 
-  constructor(private router: Router) { }
+  constructor(router: Router) {
+    super(router)
+   }
   canDeactivate(component: RegisterComponent): boolean {
     if(component.changesNotSaved){
       return window.confirm('Changes aren\'t saved, Do you really want to leave?');
@@ -17,43 +18,9 @@ export class SupplierGuard implements CanActivate, CanDeactivate<RegisterCompone
     return true;
   }
 
-  canActivate(routeAc: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!this.localStorage.HasUserLoggedIn()) {
-      this.router.navigate(['/account/login'],{queryParams: { returnUrl: this.router.url}});
-      return false;
-    }
-
-    let user = this.localStorage.getUser();
-    let claimData: any = routeAc.data[0]
-
-    if (claimData !== undefined) {
-      let claim = routeAc.data[0]['claim']
-
-      if (claim) {
-
-        if (!user.claims) {
-          this.unauthorizedAccess();
-          return false
-        }
-
-        let userClaims = user.claims.find((x: any) => x.type === claim.name);
-
-        if (!userClaims) {
-          this.unauthorizedAccess();
-          return false
-        }
-
-        let claimValues = userClaims.value as string;
-
-        if(!claimValues.includes(claim.value)){
-          this.unauthorizedAccess();
-        }
-      }
-    }
-    return true;
+  canActivate(routeAc: ActivatedRouteSnapshot): boolean {
+    return super.validClaims(routeAc)
   }
 
-  unauthorizedAccess() {
-    this.router.navigate(['/unauthorized'])
-  }
+
 }

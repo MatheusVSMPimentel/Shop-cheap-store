@@ -19,7 +19,8 @@ const routes: Routes = [{
       data: [{ claim: { name: "Fornecedor", value: "Adicionar" } }]
     },
     {
-      path: 'edit/:id', component: SupplierEditComponent, resolve: {
+      path: 'edit/:id',component: SupplierEditComponent,
+      canActivate: [SupplierGuard], resolve: {
         supplier: SupplierResolve
       },
       data: [{ claim: { name: "Fornecedor", value: "Atualizar" } }]
@@ -33,6 +34,7 @@ const routes: Routes = [{
       path: 'delete/:id', component: SupplierDeleteComponent, resolve: {
         supplier: SupplierResolve
       },
+      canActivate: [SupplierGuard],
       data: [{claim: {name: "Fornecedor", value: "Excluir"}}]
     }
   ]
