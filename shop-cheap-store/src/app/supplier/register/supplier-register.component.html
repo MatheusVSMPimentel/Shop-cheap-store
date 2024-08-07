@@ -5,7 +5,7 @@
   <hr>
   <div class="row">
     <div class="col-md-10">
-      <form novalidate="novalidate" (ngSubmit)="registerSupplier()" [formGroup]="registerForm">
+      <form novalidate="novalidate" (ngSubmit)="registerSupplier()" [formGroup]="supplierForm">
 
         <div class="alert alert-danger" *ngIf="errors.length > 0">
           <h3 id="msgRetorno">Oops! Something isn't right:</h3>
@@ -166,9 +166,9 @@
 
         <div class="form-group">
           <div class="col-md-4 col-md-offset-2">
-            <p>Valid Form: {{ registerForm.valid }}</p>
-            <p>Touched Form: {{ registerForm.touched }}</p>
-            <p>Dirty Form: {{ registerForm.dirty }}</p><br>
+            <p>Valid Form: {{ supplierForm.valid }}</p>
+            <p>Touched Form: {{ supplierForm.touched }}</p>
+            <p>Dirty Form: {{ supplierForm.dirty }}</p><br>
             <p>Form Result: {{ formResult }}</p>
           </div>
         </div>

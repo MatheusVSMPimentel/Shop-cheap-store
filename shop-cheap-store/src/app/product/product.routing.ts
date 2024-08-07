@@ -22,7 +22,7 @@ const routes: Routes = [{
     {
       path: 'edit/:id', component: ProductEditComponent, resolve: {
         product: ProductResolve
-      },
+      }, canActivate: [ProductGuard],
       data: [{ claim: { name: "Produto", value: "Atualizar" } }]
     },
     {
@@ -33,7 +33,7 @@ const routes: Routes = [{
     {
       path: 'delete/:id', component: ProductDeleteComponent, resolve: {
         product: ProductResolve
-      },
+      },canActivate: [ProductGuard],
       data: [{claim: {name: "Produto", value: "Excluir"}}]
     }
   ]

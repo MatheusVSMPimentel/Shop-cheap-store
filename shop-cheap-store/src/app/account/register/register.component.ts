@@ -7,26 +7,24 @@ import { CustomValidators } from 'ngx-custom-validators';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { FormBaseComponent } from '../../base-components/form-base.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent implements OnInit, AfterViewInit {
+export class RegisterComponent extends FormBaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, {read: ElementRef} ) formInputElements !: ElementRef[];
 
   errors: any[] = [];
   registerForm !: FormGroup;
   user!: User;
-  changesNotSaved!: boolean;
-  validationMessages!: ValidationMessages;
-  genericValidator!: GenericValidator ;
-  displayMessage: DisplayMessage = {};
 
   constructor (private formBuilder: FormBuilder, private accountService: AccountService,
     private router: Router, private toastr: ToastrService
   ){
+    super();
     this.validationMessages = {
       email:{
         required: 'The field e-mail is required.',
@@ -41,24 +39,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.genericValidator = new GenericValidator(this.validationMessages)
+    super.settingUpMessagesValidation(this.validationMessages)
   }
 
   ngAfterViewInit(): void {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-    let controlDigits: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'keyup'));
-
-    merge(...controlDigits).subscribe(() => {
-      this.displayMessage = this.genericValidator.messageProcessing(this.registerForm);
-      this.changesNotSaved = true;
-    })
-
-    merge(...controlBlurs).subscribe(() => {
-      this.displayMessage = this.genericValidator.messageProcessing(this.registerForm);
-      this.changesNotSaved = true;
-    })
+    super.settingUpFormValidation(this.formInputElements, [this.registerForm])
   }
 
   ngOnInit(): void {
