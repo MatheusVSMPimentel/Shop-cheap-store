@@ -28,7 +28,8 @@ describe('Tests from register form', () => {
     page.value.sendKeys('1234,50');
     page.setImageFilePathToForm();
     browser.driver.actions().mouseMove(page.registerProductButton).perform();
-    //page.active.sendKeys(' ');
+    page.active.sendKeys(' ');
+    page.active.sendKeys(' ');
     page.registerProductButton.submit();
 
     await page.wait(7500);
