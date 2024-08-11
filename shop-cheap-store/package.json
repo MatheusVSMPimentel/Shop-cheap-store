@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --watch --configuration production --deploy-url /shop-cheap-store/ --base-href /shop-cheap-store/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

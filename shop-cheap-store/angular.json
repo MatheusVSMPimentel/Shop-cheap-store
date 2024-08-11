@@ -28,6 +28,7 @@
             "outputPath": "dist/shop-cheap-store",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "baseHref": "/shop-cheap-store/",
             "polyfills": [
               "zone.js",
               "@angular/localize/init"
@@ -46,7 +47,9 @@
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": []
+            "scripts": [
+              
+            ]
           },
           "configurations": {
             "production": {
