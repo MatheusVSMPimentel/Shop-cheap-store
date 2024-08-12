@@ -7,7 +7,6 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-
           "inlineStyle": true,
           "standalone": false
         },
@@ -28,7 +27,7 @@
             "outputPath": "dist/shop-cheap-store",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "baseHref": "/shop-cheap-store/",
+            "baseHref": "/",
             "polyfills": [
               "zone.js",
               "@angular/localize/init"
@@ -47,12 +46,15 @@
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [
-              
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/shop-cheap-store-prd",
+              "aot": true,
+              "progress": true,
+              "baseHref": "/",
+              "deployUrl": "./",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
